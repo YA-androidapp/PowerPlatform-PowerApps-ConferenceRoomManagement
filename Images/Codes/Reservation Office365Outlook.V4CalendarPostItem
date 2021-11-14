@@ -1,0 +1,45 @@
+UpdateContext({IsSpinnerGroupVisible: true});
+
+
+Set(_myCalendarName, LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = "予定表").Name);
+If(
+    IsBlank(_myCalendarName),
+    Set(_myCalendarName, LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = "Calendar").Name)
+);
+
+Set(
+    _myScheduledMeeting,
+    Office365Outlook.V4CalendarPostItem(
+        _myCalendarName,
+        TextMeetingSubject1.Text,
+        Text(DateAdd(DateTimeValue(_selectedMeetingTime.StartTime), -TimeZoneOffset(), Minutes)),
+        Text(DateAdd(DateTimeValue(_selectedMeetingTime.EndTime), -TimeZoneOffset(), Minutes)),
+        "(UTC+09:00) Osaka, Sapporo, Tokyo",
+        {
+            requiredAttendees: Concat(MyPeople, UserPrincipalName & ";") & _selectedRoom.Address,
+            body: TextMeetingMessage1.Text,
+            location: _selectedRoom.Name,
+            importance: "normal",
+            showAs:"busy",
+            responseRequested: true,
+            recurrence: MeetingRecurrence.Selected.Value,
+            recurrenceEnd: If(MeetingRecurrence.Selected.Value = "none", "", Text(MeetingRecurrenceEndDateSelect.SelectedDate, "yyyy-mm-dd"))
+        }
+    )
+);
+
+Concurrent(
+    Reset(TextMeetingLocation1),
+    Reset(TextMeetingMessage1),
+    Reset(TextMeetingSubject1),
+    Clear(MyPeople),
+    Set(_roomListSelected, false),
+    Set(_selectedMeetingTime, Blank()),
+    Set(_selectedRoom, Blank()),
+    Set(_selectedRoomList, Blank())
+);
+
+Notify("スケジュールを登録しました", NotificationType.Success, 5000);
+
+
+UpdateContext({IsSpinnerGroupVisible: false});
