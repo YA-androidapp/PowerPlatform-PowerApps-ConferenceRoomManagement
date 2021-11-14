@@ -13,7 +13,7 @@ $rooms | Select-Object Identity,DisplayName,Floor,FloorLabel | Sort-Object Prima
 
 
 # https://docs.microsoft.com/ja-jp/powershell/module/exchange/set-place
-#     Set-Place -Identity room0201@contoso.com -Floor 2 -FloorLabel "2F"
+#     Set-Place -Identity room0201@contoso.com -Floor 2 -FloorLabel "2F" -Label 0201
 $mailboxes = Get-Mailbox | Where-Object {$_.RecipientTypeDetails -eq "RoomMailbox"}
 
 $mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room02") } | ForEach-Object{Write-Host $_.PrimarySmtpAddress}
