@@ -1,0 +1,143 @@
+WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "Start",
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+// テーブルを再読み込み
+Refresh(mConferenceRooms);
+Refresh(mLogLevels);
+Refresh(mRoomStatuses);
+Refresh(mSettingTypes);
+Refresh(pSettings);
+Refresh(tAccessLogs);
+Refresh(tEventLogs);
+
+// クライアント環境判定
+Set(IsMobile, CheckClient.Run().ismobile = "True");
+WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "IsMobile: " & If(IsMobile, "true", "false"),
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+// 会議室一覧を取得
+ClearCollect(TargetRooms, Blank());
+ForAll(
+    mConferenceRooms,
+    Collect(
+        TargetRooms,
+        IfError(
+            GetRoomDetails.Run(ThisRecord.Email)
+            ,
+            Blank()
+        )
+    )
+);
+Set(
+    RoomMaster,
+    Ungroup(
+        AddColumns(
+            TargetRooms,
+            "join",
+            Filter(
+                mConferenceRooms,
+                emailaddress = yaa_email
+            )
+        ),
+        "join"
+    )
+);
+
+// クライアント環境判定
+If(
+    IsMobile
+    ,
+
+    // モバイルの場合
+    // LocalDataを読み出す
+    ClearCollect(
+        LocalData,
+        Blank()
+    );
+    LoadData(
+        LocalData,
+        "Goudo",
+        true
+    );
+    Set(
+        Cnt,
+        {
+            Floor: IfError(Value(First(LocalData.lFloor).lFloor), -1),
+            RoomEmail: Text(First(LocalData.lRoomEmail).lRoomEmail),
+            Status: LookUp(mRoomStatuses, Key = "UnUsed")
+        }
+    );
+    ,
+
+    // PCの場合
+    // LocalDataを読み出せないので空白を設定
+    ClearCollect(
+        LocalData,
+        {
+            lFloor: -1,
+            lRoomEmail: ""
+        }
+    );
+    Set(
+        Cnt,
+        {
+            Floor: -1,
+            RoomEmail: "",
+            Status: LookUp(mRoomStatuses, Key = "UnUsed")
+        }
+    ); 
+);
+
+If(
+    !Loading_NotToNavigate
+    ,
+
+    WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate",
+        AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+    If(
+        Value(If(!IsBlank(Cnt.Floor), Cnt.Floor, "-1")) > 0
+        ,
+
+        // フロアマップ画面に遷移
+        WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomListScreen",
+            AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+        Sleep.Run(1);
+        Navigate(
+            RoomListScreen,
+            ScreenTransition.None
+        )
+    
+        ,
+
+        If(
+            !IsBlank(IfError(Cnt.RoomEmail, Blank()))
+            ,
+
+            // 会議室画面に遷移
+            WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomScreen",
+                AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+            Sleep.Run(1);
+            Navigate(
+                RoomScreen,
+                ScreenTransition.None
+            )
+
+            ,
+
+            // フロア選択画面に遷移
+            WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate FloorListScreen",
+                AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+
+            Sleep.Run(3);
+            Navigate(
+                FloorListScreen,
+                ScreenTransition.None
+            );
+
+        );
+
+    );
+);
