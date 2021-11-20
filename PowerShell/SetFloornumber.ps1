@@ -17,7 +17,7 @@ $rooms | Select-Object Identity,DisplayName,Floor,FloorLabel | Sort-Object Prima
 $mailboxes = Get-Mailbox | Where-Object {$_.RecipientTypeDetails -eq "RoomMailbox"}
 
 $mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room02") } | ForEach-Object{Write-Host $_.PrimarySmtpAddress}
-$mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room02") } | ForEach-Object{Set-Place -Identity $_.PrimarySmtpAddress -Floor 12 -FloorLabel "12F"}
+$mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room02") } | ForEach-Object{Set-Place -Identity $_.PrimarySmtpAddress -Floor 2 -FloorLabel "2F"}
 
 $mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room12") } | ForEach-Object{Write-Host $_.PrimarySmtpAddress}
 $mailboxes | Where-Object {$_.PrimarySmtpAddress.StartsWith("room12") } | ForEach-Object{Set-Place -Identity $_.PrimarySmtpAddress -Floor 12 -FloorLabel "12F"}
