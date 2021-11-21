@@ -10,6 +10,45 @@ Refresh(pSettings);
 Refresh(tAccessLogs);
 Refresh(tEventLogs);
 
+
+// 設定読み込み
+//
+UpdateContext({SettingsAuthor: LookUp(pSettings, Key=AppCnt.App&"/Author").Value});
+If(IsBlank(SettingsAuthor), UpdateContext({SettingsAuthor: LookUp(pSettings, Key=AppCnt.Solution&"/Author").Value}));
+//
+UpdateContext({SettingsDebugMode: LookUp(pSettings, Key=AppCnt.App&"/DebugMode").Value});
+If(IsBlank(SettingsDebugMode), UpdateContext({SettingsDebugMode: LookUp(pSettings, Key=AppCnt.Solution&"/DebugMode").Value}));
+//
+UpdateContext({SettingsMaintenanceMode: LookUp(pSettings, Key=AppCnt.App&"/MaintenanceMode").Value});
+If(IsBlank(SettingsMaintenanceMode), UpdateContext({SettingsMaintenanceMode: LookUp(pSettings, Key=AppCnt.Solution&"/MaintenanceMode").Value}));
+//
+UpdateContext({SettingsThemeColorMain: LookUp(pSettings, Key=AppCnt.App&"/ThemeColor/Main").Value});
+If(IsBlank(SettingsThemeColorMain), UpdateContext({SettingsThemeColorMain: LookUp(pSettings, Key=AppCnt.Solution&"/ThemeColor/Main").Value}));
+//
+UpdateContext({SettingsTimerIntervalMinuteGraphAPI: LookUp(pSettings, Key=AppCnt.App&"/TimerIntervalMinute/GraphAPI").Value});
+If(IsBlank(SettingsTimerIntervalMinuteGraphAPI), UpdateContext({SettingsTimerIntervalMinuteGraphAPI: LookUp(pSettings, Key=AppCnt.Solution&"/TimerIntervalMinute/GraphAPI").Value}));
+//
+UpdateContext({SettingsTimerIntervalMinuteDataverse: LookUp(pSettings, Key=AppCnt.App&"/TimerIntervalMinute/Dataverse").Value});
+If(IsBlank(SettingsTimerIntervalMinuteDataverse), UpdateContext({SettingsTimerIntervalMinuteDataverse: LookUp(pSettings, Key=AppCnt.Solution&"/TimerIntervalMinute/Dataverse").Value}));
+//
+UpdateContext({SettingsVersion: LookUp(pSettings, Key=AppCnt.App&"/Version").Value});
+If(IsBlank(SettingsVersion), UpdateContext({SettingsVersion: LookUp(pSettings, Key=AppCnt.Solution&"/Version").Value}));
+//
+Set(
+    AppSetting,
+    {
+        Author: SettingsAuthor,
+        DebugMode: If(SettingsDebugMode="true", true, false),
+        MaintenanceMode: If(SettingsMaintenanceMode="true", true, false),
+        ThemeColorMain: SettingsThemeColorMain,
+        TimerIntervalMinuteGraphAPI: Value(SettingsTimerIntervalMinuteGraphAPI),
+        TimerIntervalMinuteDataverse: Value(SettingsTimerIntervalMinuteDataverse),
+        Version: SettingsVersion
+    }
+);
+//
+
+
 // クライアント環境判定
 Set(IsMobile, CheckClient.Run().ismobile = "True");
 WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "IsMobile: " & If(IsMobile, "true", "false"),
@@ -89,7 +128,7 @@ If(
 );
 
 If(
-    !Loading_NotToNavigate
+    !Loading_NotToNavigate || !SettingsDebugMode
     ,
 
     WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate",
@@ -112,7 +151,8 @@ If(
         ,
 
         If(
-            !IsBlank(IfError(Cnt.RoomEmail, Blank()))
+            // !IsBlank(IfError(Cnt.RoomEmail, Blank()))
+            false
             ,
 
             // 会議室画面に遷移
