@@ -1,38 +1,65 @@
-WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "Start",
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "Started",
     AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "Started" & Char(13) & Char(10) & LoadingLog);
 
 // テーブルを再読み込み
-Refresh(mConferenceRooms);
-Refresh(mLogLevels);
-Refresh(mRoomStatuses);
-Refresh(mSettingTypes);
-Refresh(pSettings);
-Refresh(tAccessLogs);
-Refresh(tEventLogs);
+Concurrent(
+    Refresh(mConferenceRooms),
+    Refresh(mLogLevels),
+    Refresh(mRoomStatuses),
+    Refresh(mSettingTypes),
+    Refresh(pSettings),
+    Refresh(tAccessLogs),
+    Refresh(tEventLogs)
+);
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "Refreshed",
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "Refreshed" & Char(13) & Char(10) & LoadingLog);
 
 
 // 設定読み込み
 //
 UpdateContext({SettingsAuthor: LookUp(pSettings, Key=AppCnt.App&"/Author").Value});
 If(IsBlank(SettingsAuthor), UpdateContext({SettingsAuthor: LookUp(pSettings, Key=AppCnt.Solution&"/Author").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsAuthor: "&SettingsAuthor,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsAuthor: "& SettingsAuthor & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsDebugMode: LookUp(pSettings, Key=AppCnt.App&"/DebugMode").Value});
 If(IsBlank(SettingsDebugMode), UpdateContext({SettingsDebugMode: LookUp(pSettings, Key=AppCnt.Solution&"/DebugMode").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsDebugMode: "&SettingsDebugMode,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsDebugMode: "& SettingsDebugMode & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsMaintenanceMode: LookUp(pSettings, Key=AppCnt.App&"/MaintenanceMode").Value});
 If(IsBlank(SettingsMaintenanceMode), UpdateContext({SettingsMaintenanceMode: LookUp(pSettings, Key=AppCnt.Solution&"/MaintenanceMode").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsMaintenanceMode: "&SettingsMaintenanceMode,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsMaintenanceMode: "& SettingsMaintenanceMode & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsThemeColorMain: LookUp(pSettings, Key=AppCnt.App&"/ThemeColor/Main").Value});
 If(IsBlank(SettingsThemeColorMain), UpdateContext({SettingsThemeColorMain: LookUp(pSettings, Key=AppCnt.Solution&"/ThemeColor/Main").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsThemeColorMain: "&SettingsThemeColorMain,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsThemeColorMain: "& SettingsThemeColorMain & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsTimerIntervalMinuteGraphAPI: LookUp(pSettings, Key=AppCnt.App&"/TimerIntervalMinute/GraphAPI").Value});
 If(IsBlank(SettingsTimerIntervalMinuteGraphAPI), UpdateContext({SettingsTimerIntervalMinuteGraphAPI: LookUp(pSettings, Key=AppCnt.Solution&"/TimerIntervalMinute/GraphAPI").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsTimerIntervalMinuteGraphAPI: "&SettingsTimerIntervalMinuteGraphAPI,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsTimerIntervalMinuteGraphAPI: "& SettingsTimerIntervalMinuteGraphAPI & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsTimerIntervalMinuteDataverse: LookUp(pSettings, Key=AppCnt.App&"/TimerIntervalMinute/Dataverse").Value});
 If(IsBlank(SettingsTimerIntervalMinuteDataverse), UpdateContext({SettingsTimerIntervalMinuteDataverse: LookUp(pSettings, Key=AppCnt.Solution&"/TimerIntervalMinute/Dataverse").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsTimerIntervalMinuteDataverse: "&SettingsTimerIntervalMinuteDataverse,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsTimerIntervalMinuteDataverse: "& SettingsTimerIntervalMinuteDataverse & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsVersion: LookUp(pSettings, Key=AppCnt.App&"/Version").Value});
 If(IsBlank(SettingsVersion), UpdateContext({SettingsVersion: LookUp(pSettings, Key=AppCnt.Solution&"/Version").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting : SettingsVersion"&SettingsVersion,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsVersion: "& SettingsVersion & Char(13) & Char(10) & LoadingLog);
 //
 Set(
     AppSetting,
@@ -51,8 +78,9 @@ Set(
 
 // クライアント環境判定
 Set(IsMobile, CheckClient.Run().ismobile = "True");
-WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "IsMobile: " & If(IsMobile, "true", "false"),
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "IsMobile: " & If(IsMobile, "true", "false"),
     AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "IsMobile: "& IsMobile & Char(13) & Char(10) & LoadingLog);
 
 // 会議室一覧を取得
 ClearCollect(TargetRooms, Blank());
@@ -67,6 +95,7 @@ ForAll(
         )
     )
 );
+Set(LoadingLog, "Set TargetRooms" & Char(13) & Char(10) & LoadingLog);
 Set(
     RoomMaster,
     Ungroup(
@@ -81,6 +110,7 @@ Set(
         "join"
     )
 );
+Set(LoadingLog, "Set RoomMaster" & Char(13) & Char(10) & LoadingLog);
 
 // クライアント環境判定
 If(
@@ -101,11 +131,12 @@ If(
     Set(
         Cnt,
         {
-            Floor: IfError(Value(First(LocalData.lFloor).lFloor), -1),
+            Floor: Value(First(LocalData.lFloor).lFloor),
             RoomEmail: Text(First(LocalData.lRoomEmail).lRoomEmail),
             Status: LookUp(mRoomStatuses, Key = "UnUsed")
         }
     );
+    Set(LoadingLog, "Set LocalData(Mobile)" & Char(13) & Char(10) & LoadingLog);
     ,
 
     // PCの場合
@@ -124,14 +155,17 @@ If(
             RoomEmail: "",
             Status: LookUp(mRoomStatuses, Key = "UnUsed")
         }
-    ); 
+    );
+    Set(LoadingLog, "Set LocalData(PC)" & Char(13) & Char(10) & LoadingLog);
 );
 
 If(
     !Loading_NotToNavigate || !SettingsDebugMode
     ,
+    
+    Set(LoadingLog, "Prepare screen transition" & Char(13) & Char(10) & LoadingLog);
 
-    WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate",
+    WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate",
         AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 
     If(
@@ -139,7 +173,7 @@ If(
         ,
 
         // フロアマップ画面に遷移
-        WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomListScreen",
+        WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomListScreen",
             AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 
         Sleep.Run(1);
@@ -156,7 +190,7 @@ If(
             ,
 
             // 会議室画面に遷移
-            WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomScreen",
+            WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate RoomScreen",
                 AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 
             Sleep.Run(1);
@@ -168,7 +202,7 @@ If(
             ,
 
             // フロア選択画面に遷移
-            WriteLog.Run(Text(Now(), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate FloorListScreen",
+            WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "!Loading_NotToNavigate FloorListScreen",
                 AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 
             Sleep.Run(3);
