@@ -1,0 +1,25 @@
+// ステータス
+InAdvance
+InUse
+Left
+Preparing
+UnUsed
+Vacancy
+Waiting
+
+
+
+// InUse判定
+@and(
+  contains(item(), 'yaa_scheduledstarttime'),
+  contains(item(), 'yaa_scheduledendtime'),
+  contains(item(), 'yaa_actualstarttime'),
+  not(contains(item(), 'yaa_actualendtime')),
+
+  less(item()?['yaa_scheduledstarttime'], utcNow()),
+  greater(item()?['yaa_scheduledendtime'], utcNow()),
+  less(coalesce(item()?['yaa_actualstarttime'], ''), utcNow())
+)
+
+
+
