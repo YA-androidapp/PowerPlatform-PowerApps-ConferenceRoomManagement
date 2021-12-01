@@ -1,0 +1,88 @@
+UpdateContext({Room_SpinnerGroupEnabled: true});
+
+
+// 入室可能時刻 / 開始予定時刻 / 自動キャンセル時刻 / 終了予定時刻間近 / 終了予定時刻 になった予定がないか確認
+// Clear(ll);
+
+UpdateContext({
+    NowTime: If(!IsBlank(NowTimeGraphApi), NowTimeGraphApi, Now())
+});
+UpdateContext({
+    BaseTime: Text(NowTime, "hh:mm"),
+    PreEntryBaseTime: Text(DateAdd(NowTime, 10, Minutes), "hh:mm"),
+    AutoCancelBaseTime: Text(DateAdd(NowTime, -10, Minutes), "hh:mm"),
+    NoticeBaseTime: Text(DateAdd(NowTime, 1, Minutes), "hh:mm")
+});
+UpdateContext({
+    NowTimeGraphApi: Blank()
+});
+
+ForAll(
+    Schedules,
+    
+    // Collect(ll, {item: Text(DateTimeValue(ThisRecord.start.dateTime), DateTimeFormat.UTC)});
+    // Collect(ll, {item: ThisRecord});
+    If(
+        Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = PreEntryBaseTime,
+        Notify("Temp");
+        // EnterLeaveCancelRoom.Run(
+        //     "Temp",
+        //     ThisRecord.id,
+        //     {
+        //         text_2: ThisRecord.iCalUId,
+        //         text_4: Text(DateTimeValue(ThisRecord.start.dateTime), DateTimeFormat.UTC),
+        //         text_5: Text(DateTimeValue(ThisRecord.end.dateTime), DateTimeFormat.UTC),
+        //         text_8: ThisRecord.location.uniqueId,
+        //         text_9: ThisRecord.organizer.emailAddress.address
+        //     }
+        // );
+        ,
+
+        If(
+            Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = BaseTime,
+            Notify("Waiting");
+            // EnterLeaveCancelRoom.Run(
+            //     "Waiting",
+            //     ThisRecord.id
+            // );
+            ,
+
+            If(
+                Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = AutoCancelBaseTime,
+                Notify("AutoCancel");
+                // EnterLeaveCancelRoom.Run(
+                //     "AutoCancel",
+                //     ThisRecord.id
+                // );
+                ,
+
+                If(
+                    Text(DateTimeValue(ThisRecord.end.dateTime), "hh:mm") = NoticeBaseTime,
+                    Notify("残り1分で退室時刻です。", NotificationType.Information, 5000);
+                    ,
+                    If(
+                        Text(DateTimeValue(ThisRecord.end.dateTime), "hh:mm") = BaseTime,
+                        Notify("Leave");
+                        // EnterLeaveCancelRoom.Run(
+                        //     "Leave",
+                        //     ThisRecord.id
+                        // );
+                        ,
+                        If(
+                            DateTimeValue(ThisRecord.end.dateTime) < NowTime,
+                            Notify("Leave");
+                            // EnterLeaveCancelRoom.Run(
+                            //     "Leave",
+                            //     ThisRecord.id
+                            // );
+                        )
+                    )
+                )
+            )
+        )
+    );
+);
+// Set(lll, Concat(ll, item & " "));
+
+
+UpdateContext({Room_SpinnerGroupEnabled: false});
