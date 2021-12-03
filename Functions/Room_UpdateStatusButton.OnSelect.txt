@@ -1,0 +1,36 @@
+UpdateContext({Room_SpinnerGroupEnabled: true});
+
+
+// 入室可能時刻 / 開始予定時刻 / 自動キャンセル時刻 / 終了予定時刻間近 / 終了予定時刻 になった予定がないか確認
+// Clear(ll);
+
+UpdateContext({
+    NowTime: If(!IsBlank(NowTimeGraphApi), NowTimeGraphApi, Now())
+});
+UpdateContext({
+    BaseTime: Text(NowTime, "hh:mm"),
+    PreEntryBaseTime: Text(DateAdd(NowTime, AppSetting.StatusIntervalMinuteInAdvance, Minutes), "hh:mm"),
+    AutoCancelBaseTime: Text(DateAdd(NowTime, -1 * AppSetting.StatusIntervalMinutePreparing, Minutes), "hh:mm"),
+    NoticeBaseTime: Text(DateAdd(NowTime, AppSetting.StatusIntervalMinuteEndNotice, Minutes), "hh:mm")
+});
+UpdateContext({
+    NowTimeGraphApi: Blank()
+});
+
+ForAll(
+    Schedules,
+    If(
+        Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = PreEntryBaseTime,
+        CopyEventToDataverse.Run(
+            ThisRecord.id,
+            ThisRecord.iCalUId,
+            Text(DateTimeValue(ThisRecord.start.dateTime), DateTimeFormat.UTC),
+            Text(DateTimeValue(ThisRecord.end.dateTime), DateTimeFormat.UTC),
+            ThisRecord.location.uniqueId,
+            ThisRecord.organizer.emailAddress.address
+        );
+    );
+);
+
+
+UpdateContext({Room_SpinnerGroupEnabled: false});
