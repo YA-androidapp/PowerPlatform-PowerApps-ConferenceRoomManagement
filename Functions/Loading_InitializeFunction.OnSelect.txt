@@ -67,11 +67,11 @@ WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:s
     AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 Set(LoadingLog, "SettingsStatusIntervalMinuteInAdvance: "& SettingsStatusIntervalMinuteInAdvance & Char(13) & Char(10) & LoadingLog);
 //
-UpdateContext({SettingsStatusIntervalMinutePreparing: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/Preparing").Value});
-If(IsBlank(SettingsStatusIntervalMinutePreparing), UpdateContext({SettingsStatusIntervalMinutePreparing: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/Preparing").Value}));
-WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsStatusIntervalMinutePreparing: "&SettingsStatusIntervalMinutePreparing,
+UpdateContext({SettingsStatusIntervalMinuteWaiting: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/Waiting").Value});
+If(IsBlank(SettingsStatusIntervalMinuteWaiting), UpdateContext({SettingsStatusIntervalMinuteWaiting: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/Waiting").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsStatusIntervalMinuteWaiting: "&SettingsStatusIntervalMinuteWaiting,
     AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
-Set(LoadingLog, "SettingsStatusIntervalMinutePreparing: "& SettingsStatusIntervalMinutePreparing & Char(13) & Char(10) & LoadingLog);
+Set(LoadingLog, "SettingsStatusIntervalMinuteWaiting: "& SettingsStatusIntervalMinuteWaiting & Char(13) & Char(10) & LoadingLog);
 //
 UpdateContext({SettingsStatusIntervalMinuteEndNotice: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/EndNotice").Value});
 If(IsBlank(SettingsStatusIntervalMinuteEndNotice), UpdateContext({SettingsStatusIntervalMinuteEndNotice: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/EndNotice").Value}));
@@ -89,7 +89,7 @@ Set(
         TimerIntervalMinuteGraphAPI: Value(SettingsTimerIntervalMinuteGraphAPI),
         TimerIntervalMinuteDataverse: Value(SettingsTimerIntervalMinuteDataverse),
         StatusIntervalMinuteInAdvance: Value(SettingsStatusIntervalMinuteInAdvance),
-        StatusIntervalMinutePreparing: Value(SettingsStatusIntervalMinutePreparing),
+        StatusIntervalMinuteWaiting: Value(SettingsStatusIntervalMinuteWaiting),
         StatusIntervalMinuteEndNotice: Value(SettingsStatusIntervalMinuteEndNotice),
         Version: SettingsVersion
     }
