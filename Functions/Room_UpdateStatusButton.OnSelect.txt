@@ -10,27 +10,27 @@ UpdateContext({
 UpdateContext({
     BaseTime: Text(NowTime, "hh:mm"),
     PreEntryBaseTime: Text(DateAdd(NowTime, AppSetting.StatusIntervalMinuteInAdvance, Minutes), "hh:mm"),
-    AutoCancelBaseTime: Text(DateAdd(NowTime, -1 * AppSetting.StatusIntervalMinutePreparing, Minutes), "hh:mm"),
+    AutoCancelBaseTime: Text(DateAdd(NowTime, -1 * AppSetting.StatusIntervalMinuteWaiting, Minutes), "hh:mm"),
     NoticeBaseTime: Text(DateAdd(NowTime, AppSetting.StatusIntervalMinuteEndNotice, Minutes), "hh:mm")
 });
 UpdateContext({
     NowTimeGraphApi: Blank()
 });
 
-ForAll(
-    Schedules,
-    If(
-        Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = PreEntryBaseTime,
-        CopyEventToDataverse.Run(
-            ThisRecord.id,
-            ThisRecord.iCalUId,
-            Text(DateTimeValue(ThisRecord.start.dateTime), DateTimeFormat.UTC),
-            Text(DateTimeValue(ThisRecord.end.dateTime), DateTimeFormat.UTC),
-            ThisRecord.location.uniqueId,
-            ThisRecord.organizer.emailAddress.address
-        );
-    );
-);
+// ForAll(
+//     Schedules,
+//     If(
+//         Text(DateTimeValue(ThisRecord.start.dateTime), "hh:mm") = PreEntryBaseTime,
+//         CopyEventToDataverse.Run(
+//             ThisRecord.id,
+//             ThisRecord.iCalUId,
+//             Text(DateTimeValue(ThisRecord.start.dateTime), DateTimeFormat.UTC),
+//             Text(DateTimeValue(ThisRecord.end.dateTime), DateTimeFormat.UTC),
+//             ThisRecord.location.uniqueId,
+//             ThisRecord.organizer.emailAddress.address
+//         );
+//     );
+// );
 
 
 UpdateContext({Room_SpinnerGroupEnabled: false});
