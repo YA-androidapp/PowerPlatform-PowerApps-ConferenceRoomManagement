@@ -61,6 +61,24 @@ WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:s
     AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
 Set(LoadingLog, "SettingsVersion: "& SettingsVersion & Char(13) & Char(10) & LoadingLog);
 //
+UpdateContext({SettingsStatusIntervalMinuteInAdvance: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/InAdvance").Value});
+If(IsBlank(SettingsStatusIntervalMinuteInAdvance), UpdateContext({SettingsStatusIntervalMinuteInAdvance: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/InAdvance").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsStatusIntervalMinuteInAdvance: "&SettingsStatusIntervalMinuteInAdvance,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsStatusIntervalMinuteInAdvance: "& SettingsStatusIntervalMinuteInAdvance & Char(13) & Char(10) & LoadingLog);
+//
+UpdateContext({SettingsStatusIntervalMinutePreparing: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/Preparing").Value});
+If(IsBlank(SettingsStatusIntervalMinutePreparing), UpdateContext({SettingsStatusIntervalMinutePreparing: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/Preparing").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsStatusIntervalMinutePreparing: "&SettingsStatusIntervalMinutePreparing,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsStatusIntervalMinutePreparing: "& SettingsStatusIntervalMinutePreparing & Char(13) & Char(10) & LoadingLog);
+//
+UpdateContext({SettingsStatusIntervalMinuteEndNotice: LookUp(pSettings, Key=AppCnt.App&"/StatusIntervalMinute/EndNotice").Value});
+If(IsBlank(SettingsStatusIntervalMinuteEndNotice), UpdateContext({SettingsStatusIntervalMinuteEndNotice: LookUp(pSettings, Key=AppCnt.Solution&"/StatusIntervalMinute/EndNotice").Value}));
+WriteLog.Run(Text(DateAdd(Now(), TimeZoneOffset(), Minutes), "yyyy-mm-ddThh:mm:ss"), LookUp(mLogLevels, Key="Info").Key, "AppSetting SettingsStatusIntervalMinuteEndNotice: "&SettingsStatusIntervalMinuteEndNotice,
+    AppCnt.Solution, AppCnt.App, {text_5:"", text_6:"Loading_InitializeFunction.OnSelect", text_7:""});
+Set(LoadingLog, "SettingsStatusIntervalMinuteEndNotice: "& SettingsStatusIntervalMinuteEndNotice & Char(13) & Char(10) & LoadingLog);
+//
 Set(
     AppSetting,
     {
@@ -70,6 +88,9 @@ Set(
         ThemeColorMain: SettingsThemeColorMain,
         TimerIntervalMinuteGraphAPI: Value(SettingsTimerIntervalMinuteGraphAPI),
         TimerIntervalMinuteDataverse: Value(SettingsTimerIntervalMinuteDataverse),
+        StatusIntervalMinuteInAdvance: Value(SettingsStatusIntervalMinuteInAdvance),
+        StatusIntervalMinutePreparing: Value(SettingsStatusIntervalMinutePreparing),
+        StatusIntervalMinuteEndNotice: Value(SettingsStatusIntervalMinuteEndNotice),
         Version: SettingsVersion
     }
 );
@@ -160,7 +181,7 @@ If(
 );
 
 If(
-    !Loading_NotToNavigate || !SettingsDebugMode
+    !Loading_NotToNavigate // || !SettingsDebugMode
     ,
     
     Set(LoadingLog, "Prepare screen transition" & Char(13) & Char(10) & LoadingLog);
