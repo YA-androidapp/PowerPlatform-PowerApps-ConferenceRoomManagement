@@ -1,0 +1,34 @@
+@and(
+  contains(item(), 'yaa_scheduledstarttime'),
+  contains(item(), 'yaa_scheduledendtime'),
+  contains(item(), 'yaa_actualstarttime'),
+  not(contains(item(), 'yaa_actualendtime')),
+
+  less(formatDateTime(item()?['yaa_scheduledstarttime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')),
+  greater(formatDateTime(item()?['yaa_scheduledendtime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')),
+  less(coalesce(formatDateTime(item()?['yaa_actualstarttime'], 'yyyy-MM-ddTHH:mm:ss'), ''), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss'))
+)
+
+
+@and(
+  contains(item(), 'yaa_scheduledstarttime'),
+  contains(item(), 'yaa_scheduledendtime'),
+  not(contains(item(), 'yaa_actualstarttime')),
+  not(contains(item(), 'yaa_actualendtime')),
+
+  less(formatDateTime(item()?['yaa_scheduledstarttime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')),
+  greater(formatDateTime(item()?['yaa_scheduledstarttime'], 'yyyy-MM-ddTHH:mm:ss'), addMinutes(utcNow(), mul(-1, variables('Waiting')), 'yyyy-MM-ddTHH:mm:ss')),
+  greater(formatDateTime(item()?['yaa_scheduledendtime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss'))
+)
+
+
+@and(
+  contains(item(), 'yaa_scheduledstarttime'),
+  contains(item(), 'yaa_scheduledendtime'),
+  not(contains(item(), 'yaa_actualstarttime')),
+  not(contains(item(), 'yaa_actualendtime')),
+
+  less(formatDateTime(item()?['yaa_scheduledstarttime'], 'yyyy-MM-ddTHH:mm:ss'), addMinutes(utcNow(), variables('InAdvance'), 'yyyy-MM-ddTHH:mm:ss')),
+  greater(formatDateTime(item()?['yaa_scheduledstarttime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')),
+  greater(formatDateTime(item()?['yaa_scheduledendtime'], 'yyyy-MM-ddTHH:mm:ss'), formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss'))
+)
