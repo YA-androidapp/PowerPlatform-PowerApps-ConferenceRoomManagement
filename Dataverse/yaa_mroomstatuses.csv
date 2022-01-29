@@ -1,0 +1,8 @@
+yaa_backcolor,yaa_forecolor,yaa_icon,yaa_key,yaa_mroomstatusid,utcconversiontimezonecode,yaa_value,yaa_iconid,importsequencenumber,statuscode,timezoneruleversionnumber,versionnumber,statecode,owningbusinessunit
+"0,255,255,1","0,0,0,1",,Vacancy,,,空室,,,,,,,
+"0,255,255,1","0,0,0,1",,Left,,,退室済,,,,,,,
+"255,64,0,1","255,255,255,1",,InUse,,,使用中,,,,,,,
+"0,255,192,1","0,0,0,1",,Waiting,,,入室待ち,,,,,,,
+"0,192,255,1","0,0,0,1",,InAdvance,,,事前入室可能,,,,,,,
+"192,192,192,1","0,0,0,1",,Preparing,,,準備中,,,,,,,
+"255,255,255,1","0,0,0,1",,UnUsed,,,未使用,,,,,,,
